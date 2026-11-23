@@ -1,6 +1,6 @@
 {
   "name": "dsh-babel-notes",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Translation workspace tools for DeepSeek Harness: project scaffold, glossary checks, LaTeX metadata and progress status.",
   "type": "module",
   "main": "index.js",
@@ -10,6 +10,7 @@
     "scripts",
     "template",
     "README.md",
+    "CHANGELOG.md",
     "LICENSE"
   ],
   "keywords": [
@@ -25,7 +26,7 @@
     "type": "git",
     "url": "git+https://github.com/TaikongWalker/dsh-babel-notes.git"
   },
-  "homepage": "https://github.com/TaikongWalker/dsh-babel-notes",
+  "homepage": "https://taikongwalker.github.io/dsh-babel-notes/",
   "peerDependencies": {
     "@deepseek-ai/cordis": ">=4.1.0",
     "@deepseek-ai/dsh-tools": ">=0.0.1-rc.1"
