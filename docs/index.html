@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>巴别记 · DSH 插件源</title>
+  <style>
+    :root {
+      --bg: #121110;
+      --fg: #efe8dc;
+      --muted: #a79c8c;
+      --rule: #3a342d;
+      --panel: #1a1815;
+      --brick: #d4654c;
+      --lapis: #7fb0d4;
+      --mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+      --sans: "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
+      --serif: "Noto Serif SC", "Songti SC", SimSun, serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--sans);
+      line-height: 1.7;
+      padding: 0 max(16px, env(safe-area-inset-right, 0px)) 64px max(16px, env(safe-area-inset-left, 0px));
+    }
+    main { max-width: 860px; margin: 0 auto; }
+    header {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--rule);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .16em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+    header strong { color: var(--fg); font-weight: 500; }
+    .hero { padding: 72px 0 48px; border-bottom: 1px solid var(--rule); }
+    .mark {
+      width: 72px;
+      height: 72px;
+      display: block;
+      margin-bottom: 28px;
+    }
+    h1 {
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: clamp(42px, 7vw, 72px);
+      line-height: 1.1;
+      letter-spacing: .06em;
+      margin: 0 0 16px;
+    }
+    .lede { color: var(--muted); max-width: 38em; margin: 0; }
+    section { padding: 40px 0; border-bottom: 1px solid var(--rule); }
+    h2 {
+      font-family: var(--serif);
+      font-size: 22px;
+      letter-spacing: .06em;
+      margin: 0 0 16px;
+    }
+    p { margin: 0 0 16px; }
+    code, pre {
+      font-family: var(--mono);
+      font-size: 13px;
+    }
+    pre {
+      background: var(--panel);
+      border: 1px solid var(--rule);
+      padding: 16px 18px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+      margin: 0 0 16px;
+    }
+    a { color: var(--lapis); }
+    .tools { list-style: none; padding: 0; margin: 0; }
+    .tools li {
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      gap: 16px;
+      padding: 12px 0;
+      border-top: 1px solid var(--rule);
+    }
+    .tools li:first-child { border-top: 0; }
+    .tools code { color: var(--brick); }
+    footer {
+      padding-top: 32px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .1em;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    @media (max-width: 620px) {
+      .hero { padding-top: 48px; }
+      .tools li { grid-template-columns: 1fr; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div><strong>巴别记</strong> &nbsp; BABEL NOTES</div>
+      <div>DSH PLUGIN INDEX</div>
+    </header>
+
+    <div class="hero">
+      <svg class="mark" viewBox="0 0 480 480" aria-hidden="true">
+        <rect width="480" height="480" fill="#1a1815"/>
+        <rect x="234" y="118" width="12" height="270" fill="#7fb0d4"/>
+        <g fill="#efe8dc">
+          <rect x="90" y="330" width="300" height="28"/>
+          <rect x="110" y="286" width="260" height="28"/>
+          <rect x="130" y="242" width="220" height="28"/>
+          <rect x="150" y="198" width="180" height="28"/>
+        </g>
+        <rect x="206" y="154" width="140" height="28" fill="#d4654c"/>
+        <rect x="370" y="154" width="28" height="28" fill="#d4654c"/>
+        <rect x="90" y="378" width="300" height="8" fill="#efe8dc"/>
+      </svg>
+      <h1>巴别记<br>DSH 插件源</h1>
+      <p class="lede">为 DeepSeek Harness 提供长篇中译工作流工具：项目脚手架、术语检查、LaTeX 元数据生成与进度查看。</p>
+    </div>
+
+    <section>
+      <h2>添加索引</h2>
+      <p>在 DSH 的“发现”页添加下面的索引 URL：</p>
+      <pre>https://taikongwalker.github.io/dsh-babel-notes/index.json</pre>
+    </section>
+
+    <section>
+      <h2>安装插件</h2>
+      <pre>dsh plugin --profile demo add github:TaikongWalker/dsh-babel-notes#9b7a0d86f1aefc5321c54c70bdd02c70c328565b</pre>
+      <p>或从本地目录安装：<code>dsh plugin --profile demo add ./dsh-babel-notes</code></p>
+    </section>
+
+    <section>
+      <h2>工具</h2>
+      <ul class="tools">
+        <li><code>translation_init</code><span>从空白模板创建翻译项目。</span></li>
+        <li><code>translation_prepare</code><span>生成 LaTeX 元信息、章序与术语表。</span></li>
+        <li><code>translation_check</code><span>检查术语、标点、脚注数、未译英文与 TODO。</span></li>
+        <li><code>translation_term_candidates</code><span>从原文提取术语候选。</span></li>
+        <li><code>translation_status</code><span>读取项目元数据与进度表。</span></li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>源码</h2>
+      <p><a href="https://github.com/TaikongWalker/dsh-babel-notes">github.com/TaikongWalker/dsh-babel-notes</a></p>
+      <p>插件只含工具链与空白模板，不包含任何原文、译文或扫描件。</p>
+    </section>
+
+    <footer>
+      <span>巴别记 · BABEL NOTES</span>
+      <span>MIT License</span>
+    </footer>
+  </main>
+</body>
+</html>

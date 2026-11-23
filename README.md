@@ -22,13 +22,13 @@ dsh plugin --profile demo add dsh-babel-notes
 从 GitHub 安装（0.1.0）：
 
 ```sh
-dsh plugin --profile demo add github:TaikongWalker/dsh-babel-notes#4a356d4228728587b1e1eb3d0986634bcd311b5e
+dsh plugin --profile demo add github:TaikongWalker/dsh-babel-notes#9b7a0d86f1aefc5321c54c70bdd02c70c328565b
 ```
 
 插件市场索引（把该 URL 添加到 DSH 的“发现”页）：
 
 ```text
-https://raw.githubusercontent.com/TaikongWalker/dsh-babel-notes/main/market/index.json
+https://taikongwalker.github.io/dsh-babel-notes/index.json
 ```
 
 安装后启动 DSH，插件会在 `profile` 中插入自己的配置层。
