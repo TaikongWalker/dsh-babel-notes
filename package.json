@@ -1,0 +1,36 @@
+{
+  "name": "dsh-babel-notes",
+  "version": "0.1.0",
+  "description": "Translation workspace tools for DeepSeek Harness: project scaffold, glossary checks, LaTeX metadata and progress status.",
+  "type": "module",
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "cordis.patch.yml",
+    "scripts",
+    "template",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "dsh-plugin",
+    "deepseek-harness",
+    "translation",
+    "latex",
+    "chinese",
+    "glossary"
+  ],
+  "license": "MIT",
+  "peerDependencies": {
+    "@deepseek-ai/cordis": ">=4.1.0",
+    "@deepseek-ai/dsh-tools": ">=0.0.1-rc.1"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "engines": {
+    "dsh": ">=0.2.0 <0.3.0"
+  }
+}

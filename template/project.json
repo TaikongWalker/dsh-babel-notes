@@ -1,0 +1,20 @@
+{
+  "slug": "my-translation",
+  "title": "中文书名",
+  "subtitle": "",
+  "title_original": "Original Title",
+  "subtitle_original": "",
+  "author": "作者中文名",
+  "author_original": "Author Name",
+  "translator": "",
+  "series": "",
+  "publisher": "",
+  "original_publisher": "",
+  "original_year": "",
+  "year": "2026",
+  "version": "0.1",
+  "source_lang": "en",
+  "target_lang": "zh-CN",
+  "rights": "版权待确认",
+  "keywords": "翻译; 书籍"
+}
