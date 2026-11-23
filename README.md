@@ -1,5 +1,7 @@
 # dsh-babel-notes · 巴别记翻译工作流
 
+**发布页：** https://taikongwalker.github.io/dsh-babel-notes/
+
 DeepSeek Harness（DSH）插件：把长篇翻译项目的脚手架、术语检查、LaTeX 元数据生成与进度查看打包成几个可直接调用的工具。
 
 本插件只包含**工具链与空白模板**，不附带任何受版权保护的原文或译文。
