@@ -21,6 +21,11 @@
     "glossary"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TaikongWalker/dsh-babel-notes.git"
+  },
+  "homepage": "https://github.com/TaikongWalker/dsh-babel-notes",
   "peerDependencies": {
     "@deepseek-ai/cordis": ">=4.1.0",
     "@deepseek-ai/dsh-tools": ">=0.0.1-rc.1"
