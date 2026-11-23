@@ -1,169 +1,456 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>巴别记 · DSH 插件源</title>
-  <style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>dsh-babel-notes · 巴别记翻译工作流</title>
+<meta name="description" content="dsh-babel-notes：面向长篇中译的开源工作流插件。项目脚手架、术语检查、LaTeX 元数据与进度查看。支持 DeepSeek Harness；Claude Code 与 Codex 可手动使用同一套脚本与模板。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@500;600;700&display=swap">
+<style>
+  :root {
+    --bg: #f2ede3;
+    --fg: #171512;
+    --muted: #6d6457;
+    --rule: #d6c9b6;
+    --panel: #eae3d6;
+    --code-bg: #171512;
+    --code-fg: #efe8dc;
+    --brick: #b8442c;
+    --lapis: #275d8c;
+    --serif: "Noto Serif SC", "Songti SC", SimSun, serif;
+    --sans: "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
+    --mono: "IBM Plex Mono", Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
     :root {
       --bg: #121110;
       --fg: #efe8dc;
       --muted: #a79c8c;
       --rule: #3a342d;
       --panel: #1a1815;
+      --code-bg: #1d1b18;
+      --code-fg: #efe8dc;
       --brick: #d4654c;
       --lapis: #7fb0d4;
-      --mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
-      --sans: "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
-      --serif: "Noto Serif SC", "Songti SC", SimSun, serif;
     }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--fg);
-      font-family: var(--sans);
-      line-height: 1.7;
-      padding: 0 max(16px, env(safe-area-inset-right, 0px)) 64px max(16px, env(safe-area-inset-left, 0px));
-    }
-    main { max-width: 860px; margin: 0 auto; }
-    header {
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      flex-wrap: wrap;
-      padding: 20px 0;
-      border-bottom: 1px solid var(--rule);
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: .16em;
-      color: var(--muted);
-      text-transform: uppercase;
-    }
-    header strong { color: var(--fg); font-weight: 500; }
-    .hero { padding: 72px 0 48px; border-bottom: 1px solid var(--rule); }
-    .mark {
-      width: 72px;
-      height: 72px;
-      display: block;
-      margin-bottom: 28px;
-    }
-    h1 {
-      font-family: var(--serif);
-      font-weight: 600;
-      font-size: clamp(42px, 7vw, 72px);
-      line-height: 1.1;
-      letter-spacing: .06em;
-      margin: 0 0 16px;
-    }
-    .lede { color: var(--muted); max-width: 38em; margin: 0; }
-    section { padding: 40px 0; border-bottom: 1px solid var(--rule); }
-    h2 {
-      font-family: var(--serif);
-      font-size: 22px;
-      letter-spacing: .06em;
-      margin: 0 0 16px;
-    }
-    p { margin: 0 0 16px; }
-    code, pre {
-      font-family: var(--mono);
-      font-size: 13px;
-    }
-    pre {
-      background: var(--panel);
-      border: 1px solid var(--rule);
-      padding: 16px 18px;
-      overflow-x: auto;
-      white-space: pre-wrap;
-      word-break: break-all;
-      margin: 0 0 16px;
-    }
-    a { color: var(--lapis); }
-    .tools { list-style: none; padding: 0; margin: 0; }
-    .tools li {
-      display: grid;
-      grid-template-columns: 260px minmax(0, 1fr);
-      gap: 16px;
-      padding: 12px 0;
-      border-top: 1px solid var(--rule);
-    }
-    .tools li:first-child { border-top: 0; }
-    .tools code { color: var(--brick); }
-    footer {
-      padding-top: 32px;
-      color: var(--muted);
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: .1em;
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-    @media (max-width: 620px) {
-      .hero { padding-top: 48px; }
-      .tools li { grid-template-columns: 1fr; gap: 4px; }
-    }
-  </style>
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--sans);
+    line-height: 1.75;
+    font-size: 16px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  a { color: var(--lapis); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  a:hover { color: var(--brick); }
+  .wrap { max-width: 1080px; margin: 0 auto; }
+  header {
+    border-bottom: 1px solid var(--rule);
+  }
+  .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 20px;
+    padding-block: 18px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .top strong { color: var(--fg); font-weight: 500; letter-spacing: .18em; }
+  .top nav { display: flex; gap: 18px; flex-wrap: wrap; }
+  .top nav a { color: var(--muted); text-decoration: none; }
+  .top nav a:hover { color: var(--brick); }
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(280px, .75fr);
+    gap: clamp(32px, 6vw, 80px);
+    align-items: center;
+    padding-block: clamp(56px, 9vw, 110px) clamp(48px, 7vw, 88px);
+    border-bottom: 1px solid var(--rule);
+  }
+  .kicker {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--brick);
+    margin: 0 0 20px;
+  }
+  h1 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(40px, 6.2vw, 76px);
+    line-height: 1.15;
+    letter-spacing: .03em;
+    margin: 0 0 22px;
+    text-wrap: balance;
+  }
+  .lede {
+    font-size: clamp(17px, 1.8vw, 20px);
+    color: var(--muted);
+    max-width: 34em;
+    margin: 0 0 30px;
+  }
+  .actions { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border: 1px solid var(--fg);
+    color: var(--fg);
+    text-decoration: none;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: .08em;
+    transition: background .15s ease, color .15s ease;
+  }
+  .btn:hover { background: var(--fg); color: var(--bg); }
+  .btn--accent { border-color: var(--brick); color: var(--brick); }
+  .btn--accent:hover { background: var(--brick); color: var(--bg); }
+  .terminal {
+    background: var(--code-bg);
+    color: var(--code-fg);
+    padding: 22px;
+    border: 1px solid var(--rule);
+    min-width: 0;
+  }
+  .terminal-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: #a79c8c;
+    margin-bottom: 14px;
+  }
+  .terminal code {
+    display: block;
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.8;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    word-break: normal;
+  }
+  .terminal .prompt { color: #7fb0d4; }
+  .terminal .arg { color: #efe8dc; }
+  .terminal .comment { color: #a79c8c; }
+  .term-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid #3a342d;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .08em;
+    color: #a79c8c;
+  }
+  section { padding-block: clamp(44px, 6vw, 76px); border-bottom: 1px solid var(--rule); }
+  .section-head { display: flex; align-items: baseline; gap: 16px; margin-bottom: 30px; }
+  .section-no {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .18em;
+    color: var(--brick);
+  }
+  h2 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(26px, 3.4vw, 38px);
+    letter-spacing: .04em;
+    margin: 0;
+  }
+  .section-note { color: var(--muted); max-width: 46em; margin: 0 0 28px; }
+  .tools { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 40px; }
+  .tool {
+    display: grid;
+    grid-template-columns: 52px minmax(0, 1fr);
+    gap: 16px;
+    padding: 20px 0;
+    border-top: 1px solid var(--rule);
+  }
+  .tool:nth-child(-n+2) { border-top: 2px solid var(--fg); }
+  .tool-no {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .1em;
+    color: var(--brick);
+    padding-top: 4px;
+  }
+  .tool h3 {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: .02em;
+    margin: 0 0 6px;
+    color: var(--fg);
+  }
+  .tool p { margin: 0; color: var(--muted); font-size: 14px; }
+  .compat { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .compat th, .compat td {
+    text-align: left;
+    vertical-align: top;
+    padding: 14px 12px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .compat th {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+    border-bottom: 1px solid var(--fg);
+  }
+  .compat td:first-child { font-weight: 500; white-space: nowrap; }
+  .yes { color: var(--lapis); font-weight: 500; }
+  .no { color: var(--brick); font-weight: 500; }
+  .quick { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+  .quick-card { border: 1px solid var(--rule); background: var(--panel); padding: 22px; min-width: 0; }
+  .quick-card h3 { font-family: var(--mono); font-size: 12px; letter-spacing: .1em; margin: 0 0 4px; }
+  .quick-card .tag { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; color: var(--brick); text-transform: uppercase; }
+  .quick-card p { color: var(--muted); font-size: 13px; margin: 10px 0 14px; }
+  pre {
+    background: var(--code-bg);
+    color: var(--code-fg);
+    padding: 16px;
+    margin: 0;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.75;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    word-break: normal;
+  }
+  .tree {
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    padding: 22px;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.85;
+    color: var(--muted);
+    white-space: pre;
+  }
+  .tree b { color: var(--fg); font-weight: 500; }
+  .notes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 40px; }
+  .note-item { border-top: 1px solid var(--rule); padding-top: 16px; }
+  .note-item h3 { font-size: 15px; margin: 0 0 8px; font-weight: 500; }
+  .note-item p { margin: 0; color: var(--muted); font-size: 14px; }
+  .links { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+  .link-card {
+    display: block;
+    border: 1px solid var(--rule);
+    padding: 18px;
+    text-decoration: none;
+    color: var(--fg);
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .link-card:hover { border-color: var(--brick); background: var(--panel); color: var(--fg); }
+  .link-card span { display: block; font-family: var(--mono); font-size: 10px; letter-spacing: .12em; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
+  .link-card strong { font-family: var(--mono); font-size: 13px; font-weight: 500; word-break: break-all; }
+  footer {
+    padding-block: 34px 52px;
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .08em;
+    color: var(--muted);
+  }
+  .copy {
+    margin-top: 10px;
+    border: 1px solid var(--rule);
+    background: transparent;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .1em;
+    padding: 6px 10px;
+    cursor: pointer;
+  }
+  .copy:hover { border-color: var(--brick); color: var(--brick); }
+  @media (max-width: 860px) {
+    .hero { grid-template-columns: 1fr; align-items: start; }
+    .tools { grid-template-columns: 1fr; }
+    .tool:nth-child(2) { border-top: 1px solid var(--rule); }
+    .quick { grid-template-columns: 1fr; }
+    .notes { grid-template-columns: 1fr; }
+    .links { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .top { align-items: flex-start; }
+  }
+  @media (max-width: 520px) {
+    .compat { font-size: 12.5px; }
+    .compat th, .compat td { padding: 10px 6px; }
+    .compat td:first-child { white-space: normal; }
+    .links { grid-template-columns: 1fr; }
+    .top nav { gap: 10px; }
+  }
+</style>
 </head>
 <body>
-  <main>
-    <header>
-      <div><strong>巴别记</strong> &nbsp; BABEL NOTES</div>
-      <div>DSH PLUGIN INDEX</div>
-    </header>
+<header>
+  <div class="wrap top">
+    <div><strong>巴别记</strong> &nbsp; BABEL NOTES</div>
+    <nav>
+      <a href="#tools">工具</a>
+      <a href="#compat">兼容性</a>
+      <a href="#start">安装</a>
+      <a href="#links">链接</a>
+    </nav>
+  </div>
+</header>
 
-    <div class="hero">
-      <svg class="mark" viewBox="0 0 480 480" aria-hidden="true">
-        <rect width="480" height="480" fill="#1a1815"/>
-        <rect x="234" y="118" width="12" height="270" fill="#7fb0d4"/>
-        <g fill="#efe8dc">
-          <rect x="90" y="330" width="300" height="28"/>
-          <rect x="110" y="286" width="260" height="28"/>
-          <rect x="130" y="242" width="220" height="28"/>
-          <rect x="150" y="198" width="180" height="28"/>
-        </g>
-        <rect x="206" y="154" width="140" height="28" fill="#d4654c"/>
-        <rect x="370" y="154" width="28" height="28" fill="#d4654c"/>
-        <rect x="90" y="378" width="300" height="8" fill="#efe8dc"/>
-      </svg>
-      <h1>巴别记<br>DSH 插件源</h1>
-      <p class="lede">为 DeepSeek Harness 提供长篇中译工作流工具：项目脚手架、术语检查、LaTeX 元数据生成与进度查看。</p>
+<main class="wrap">
+  <section class="hero" style="border-bottom:1px solid var(--rule)">
+    <div>
+      <p class="kicker">Open-source translation workflow · v0.1.0</p>
+      <h1>把长篇翻译，做成一套可检查的工作流。</h1>
+      <p class="lede">dsh-babel-notes 是一个开源翻译工作流插件：项目脚手架、术语检查、LaTeX 元数据、进度查看。它不替你翻译，它让翻译过程可追踪、可复核、可交付。</p>
+      <div class="actions">
+        <a class="btn btn--accent" href="https://github.com/TaikongWalker/dsh-babel-notes">GitHub 仓库</a>
+        <a class="btn" href="https://www.npmjs.com/package/dsh-babel-notes">npm 包</a>
+        <a class="btn" href="#start">安装方式</a>
+      </div>
     </div>
+    <div class="terminal">
+      <div class="terminal-label">Quick install / DSH</div>
+      <code><span class="prompt">$</span> <span class="arg">dsh plugin --profile default add dsh-babel-notes</span>
+<span class="comment"># 或在 DSH「发现」页添加市场索引</span>
+<span class="arg">https://taikongwalker.github.io/dsh-babel-notes/index.json</span></code>
+      <button class="copy" data-copy="dsh plugin --profile default add dsh-babel-notes">复制安装命令</button>
+      <div class="term-meta"><span>MIT</span><span>DSH 0.2.x</span><span>Python 3.10+</span></div>
+    </div>
+  </section>
 
-    <section>
-      <h2>添加索引</h2>
-      <p>在 DSH 的“发现”页添加下面的索引 URL：</p>
-      <pre>https://taikongwalker.github.io/dsh-babel-notes/index.json</pre>
-    </section>
+  <section id="tools">
+    <div class="section-head"><span class="section-no">01</span><h2>五个工具</h2></div>
+    <p class="section-note">插件把翻译流程拆成五个可调用的动作。每个动作都对应仓库里的一个 Python 脚本或一份模板，DSH 负责调度，你负责判断。</p>
+    <div class="tools">
+      <div class="tool"><div class="tool-no">01</div><div><h3>translation_init</h3><p>从空白模板创建翻译项目：project.json、chapters、notes、glossary、generated。</p></div></div>
+      <div class="tool"><div class="tool-no">02</div><div><h3>translation_prepare</h3><p>从项目元数据生成 LaTeX 元信息、章序与术语对照表。</p></div></div>
+      <div class="tool"><div class="tool-no">03</div><div><h3>translation_check</h3><p>检查术语残留、禁用变体、中文标点、脚注/图数量、未译英文与 TODO。</p></div></div>
+      <div class="tool"><div class="tool-no">04</div><div><h3>translation_term_candidates</h3><p>从 source/ 提取术语候选，写入 candidates.csv，供人工定名。</p></div></div>
+      <div class="tool"><div class="tool-no">05</div><div><h3>translation_status</h3><p>读取 project.json 与 progress.csv，返回项目当前进度。</p></div></div>
+    </div>
+  </section>
 
-    <section>
-      <h2>安装插件</h2>
-      <pre>dsh plugin --profile default add dsh-babel-notes</pre>
-      <p>或从 GitHub 安装：<code>dsh plugin --profile default add github:TaikongWalker/dsh-babel-notes#9b7a0d86f1aefc5321c54c70bdd02c70c328565b</code></p>
-    </section>
+  <section id="compat">
+    <div class="section-head"><span class="section-no">02</span><h2>在哪里能用</h2></div>
+    <p class="section-note">插件本身基于 DeepSeek Harness 的 Cordis 工具 API。工作流里的 Python 脚本和 LaTeX 模板是通用的，所以 Claude Code、Codex 也能手动使用，只是不能“一键安装”。</p>
+    <table class="compat">
+      <thead><tr><th>环境</th><th>直接安装</th><th>使用方式</th></tr></thead>
+      <tbody>
+        <tr><td>DeepSeek Harness</td><td class="yes">可以</td><td>npm 包名、GitHub 仓库或市场索引；安装后 5 个工具直接可用。</td></tr>
+        <tr><td>Claude Code</td><td class="no">不能</td><td>clone 仓库，手动使用 scripts/ 与 template/；可读写文件、执行 Python 与 LaTeX。</td></tr>
+        <tr><td>Codex</td><td class="no">不能</td><td>在终端调用同一套 Python 脚本，复制 template/ 作为项目骨架。</td></tr>
+      </tbody>
+    </table>
+  </section>
 
-    <section>
-      <h2>工具</h2>
-      <ul class="tools">
-        <li><code>translation_init</code><span>从空白模板创建翻译项目。</span></li>
-        <li><code>translation_prepare</code><span>生成 LaTeX 元信息、章序与术语表。</span></li>
-        <li><code>translation_check</code><span>检查术语、标点、脚注数、未译英文与 TODO。</span></li>
-        <li><code>translation_term_candidates</code><span>从原文提取术语候选。</span></li>
-        <li><code>translation_status</code><span>读取项目元数据与进度表。</span></li>
-      </ul>
-    </section>
+  <section id="start">
+    <div class="section-head"><span class="section-no">03</span><h2>快速开始</h2></div>
+    <div class="quick">
+      <div class="quick-card">
+        <div class="tag">DSH</div>
+        <h3>直接安装</h3>
+        <p>安装后新开会话，直接让 Agent 调用 translation_init。</p>
+        <pre>dsh plugin --profile default add dsh-babel-notes</pre>
+        <button class="copy" data-copy="dsh plugin --profile default add dsh-babel-notes">复制</button>
+      </div>
+      <div class="quick-card">
+        <div class="tag">Claude Code</div>
+        <h3>手动使用</h3>
+        <p>把仓库当工具库，脚本和模板可直接在项目里跑。</p>
+        <pre>git clone https://github.com/TaikongWalker/dsh-babel-notes.git
+python scripts/prepare.py --project .
+python scripts/check.py --project . --summary</pre>
+      </div>
+      <div class="quick-card">
+        <div class="tag">Codex</div>
+        <h3>终端调用</h3>
+        <p>复制 template/ 建项目，然后用 Codex 执行脚本。</p>
+        <pre>cp -r template my-book
+python scripts/check.py --project my-book --summary</pre>
+      </div>
+    </div>
+  </section>
 
-    <section>
-      <h2>源码</h2>
-      <p><a href="https://github.com/TaikongWalker/dsh-babel-notes">github.com/TaikongWalker/dsh-babel-notes</a></p>
-      <p>插件只含工具链与空白模板，不包含任何原文、译文或扫描件。</p>
-    </section>
+  <section>
+    <div class="section-head"><span class="section-no">04</span><h2>项目结构</h2></div>
+    <p class="section-note">插件自带一个可直接编译的中文书籍骨架；原文、译文与 PDF 由使用者自己放入，插件不附带任何版权文本。</p>
+    <div class="tree"><b>translation-project/</b>
+├─ project.json          # 书目元数据
+├─ main.tex              # XeLaTeX 总装入口
+├─ preamble.tex          # 版式与宏
+├─ chapters/             # chNN.tex，一章一个文件
+├─ frontmatter/          # 封面、版权页、译者说明
+├─ backmatter/           # 术语表、译后记
+├─ glossary/terms.csv    # 术语表（唯一权威）
+├─ notes/                # 背景、风格、决策、进度
+├─ source/               # 原文档案（只读）
+├─ figures/              # 图片
+├─ generated/            # 脚本生成，勿手改
+└─ dist/                 # 最终 PDF</div>
+  </section>
 
-    <footer>
-      <span>巴别记 · BABEL NOTES</span>
-      <span>MIT License</span>
-    </footer>
-  </main>
+  <section>
+    <div class="section-head"><span class="section-no">05</span><h2>边界与依赖</h2></div>
+    <div class="notes">
+      <div class="note-item"><h3>不是翻译引擎</h3><p>它不替你翻译，也不判断译得好不好。它把“项目管理、术语、检查、排版”这一套流程工具化，判断仍然由译者做。</p></div>
+      <div class="note-item"><h3>不附带版权内容</h3><p>仓库里没有原文、译文或 PDF，只有脚本、空白模板和说明。MIT 许可；使用者放入项目的文本，其版权由使用者负责。</p></div>
+      <div class="note-item"><h3>PDF 依赖</h3><p>模板使用 XeLaTeX + ctexbook；超长脚注跨页依赖 bigfoot 与 ncctools。Python 脚本只用标准库。</p></div>
+      <div class="note-item"><h3>DSH 版本</h3><p>插件声明 <code>engines.dsh: &gt;=0.2.0 &lt;0.3.0</code>。若你的 DSH 是 0.3 以上，先确认兼容性再安装。</p></div>
+    </div>
+  </section>
+
+  <section id="links" style="border-bottom:0">
+    <div class="section-head"><span class="section-no">06</span><h2>链接</h2></div>
+    <div class="links">
+      <a class="link-card" href="https://github.com/TaikongWalker/dsh-babel-notes"><span>Source</span><strong>github.com/TaikongWalker/dsh-babel-notes</strong></a>
+      <a class="link-card" href="https://www.npmjs.com/package/dsh-babel-notes"><span>Package</span><strong>npmjs.com/package/dsh-babel-notes</strong></a>
+      <a class="link-card" href="https://taikongwalker.github.io/dsh-babel-notes/index.json"><span>Market index</span><strong>taikongwalker.github.io/dsh-babel-notes/index.json</strong></a>
+      <a class="link-card" href="https://github.com/TaikongWalker/dsh-babel-notes#readme"><span>Docs</span><strong>README / 使用说明</strong></a>
+    </div>
+  </section>
+
+  <footer>
+    <span>巴别记 · BABEL NOTES</span>
+    <span>MIT License · 2026</span>
+  </footer>
+</main>
+
+<script>
+  document.querySelectorAll('[data-copy]').forEach(function (button) {
+    button.addEventListener('click', async function () {
+      var text = button.getAttribute('data-copy');
+      var original = button.textContent;
+      try {
+        await navigator.clipboard.writeText(text);
+        button.textContent = '已复制';
+      } catch (error) {
+        button.textContent = '请手动复制';
+      }
+      setTimeout(function () { button.textContent = original; }, 1600);
+    });
+  });
+</script>
 </body>
 </html>
