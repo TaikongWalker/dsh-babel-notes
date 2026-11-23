@@ -92,6 +92,17 @@ export function apply(ctx) {
 pnpm dsh web --patch ./cordis.patch.yml
 ```
 
+## 提交署名
+
+本仓库的提交信息统一在末尾保留两位协作者：
+
+```text
+Co-Authored-By: Claude Code <noreply@anthropic.com>
+Co-Authored-By: DeepSeek <noreply@deepseek.com>
+```
+
+不改写已有提交历史；新提交按此格式追加。
+
 ## 发布
 
 ```sh
