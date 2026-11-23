@@ -22,7 +22,7 @@ dsh plugin --profile demo add dsh-babel-notes
 从 GitHub 安装（0.1.0）：
 
 ```sh
-dsh plugin --profile demo add github:TaikongWalker/dsh-babel-notes#bebfdc31401140bda1e12672e2a2af2affd90240
+dsh plugin --profile demo add github:TaikongWalker/dsh-babel-notes#4a356d4228728587b1e1eb3d0986634bcd311b5e
 ```
 
 插件市场索引（把该 URL 添加到 DSH 的“发现”页）：

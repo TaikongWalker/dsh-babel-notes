@@ -29,7 +29,7 @@
           "source": {
             "type": "git",
             "url": "https://github.com/TaikongWalker/dsh-babel-notes",
-            "commit": "bebfdc31401140bda1e12672e2a2af2affd90240"
+            "commit": "4a356d4228728587b1e1eb3d0986634bcd311b5e"
           },
           "engines": {
             "dsh": ">=0.2.0 <0.3.0"
