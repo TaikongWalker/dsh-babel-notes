@@ -27,9 +27,8 @@
           "version": "0.1.0",
           "publishTimestamp": 1795431942,
           "source": {
-            "type": "git",
-            "url": "https://github.com/TaikongWalker/dsh-babel-notes",
-            "commit": "9b7a0d86f1aefc5321c54c70bdd02c70c328565b"
+            "type": "npm",
+            "registry": "https://registry.npmjs.org"
           },
           "engines": {
             "dsh": ">=0.2.0 <0.3.0"

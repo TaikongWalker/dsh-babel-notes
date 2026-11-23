@@ -13,13 +13,13 @@ dsh plugin --profile demo add ./dsh-babel-notes
 dsh --profile demo
 ```
 
-从 npm 安装（发布后）：
+从 npm 安装（0.1.0 已发布）：
 
 ```sh
 dsh plugin --profile demo add dsh-babel-notes
 ```
 
-从 GitHub 安装（0.1.0）：
+从 GitHub 安装（同一版本）：
 
 ```sh
 dsh plugin --profile demo add github:TaikongWalker/dsh-babel-notes#9b7a0d86f1aefc5321c54c70bdd02c70c328565b
